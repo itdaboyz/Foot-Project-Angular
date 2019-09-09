@@ -1,0 +1,38 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+/*.col-1dot5 {
+   @extend .col-2;
+   max-width: percentage((1 / $grid-columns))!important;
+}*/
+
+$theme-colors: (
+    "primary": #00838f,
+    "light": #4fb3bf,
+    "dark": #005662
+);
+
+.tooltip > .arrow::before{border-top-color:#383d41 !important; border-bottom-color:#383d41 !important;box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15)}
+.tooltip > .tooltip-inner {background-color: #383d41;box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); padding:0.6rem 1.2rem; max-width:400px;}
+
+.tooltip > .tooltip-inner .date{font-size: 0.6rem; font-weight: bold; display: block}
+.tooltip > .tooltip-inner .match{font-size: 0.7rem;}
+.tooltip > .tooltip-inner .score{font-size: 0.7rem; font-weight:bold;}
+
+.tooltip.show{opacity: 1 !important;}
+
+@import "~bootstrap/scss/bootstrap";
+@import "~ag-grid-community/dist/styles/ag-grid.css";
+@import "~ag-grid-community/dist/styles/ag-theme-material.css";
+
+
+.ag-theme-material .ag-header-cell, .ag-theme-material .ag-header-group-cell, .ag-theme-material .ag-cell{
+	padding-left: 0.8rem;
+	padding-right: 0.8rem;
+}
+
+.ag-theme-material .ag-row-hover .sixInARow, .sixInARow{background-color:#ffe0b2 !important;}
+.ag-theme-material .ag-row-hover .sevenInARow, .sevenInARow{background-color:#ffcc80 !important;}
+.ag-theme-material .ag-row-hover .eightInARow, .eightInARow{background-color:#ffb74d !important;}
+.ag-row-hover{filter:brightness(95%);}

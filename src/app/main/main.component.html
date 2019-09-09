@@ -1,0 +1,37 @@
+<div *ngIf="InfosLeague[id]" class="m-3">
+	<div class="btn-group mr-3 btn-group-toggle" data-toggle="buttons">
+	  <label class="btn px-3 btn-outline-primary active" (click)="setFilter('all')">
+	    <input type="radio" name="options" id="All" autocomplete="off">All
+	  </label>
+	  <label class="btn px-3 btn-outline-primary" (click)="setFilter('home')">
+	    <input type="radio" name="options" id="Home" autocomplete="off">Home
+	  </label>
+	  <label class="btn px-3 btn-outline-primary" (click)="setFilter('away')">
+	    <input type="radio" name="options" id="Away" autocomplete="off">Away
+	  </label>
+	</div>
+	<div class="btn-group btn-group-toggle" data-toggle="buttons">
+	  <label class="btn px-3 btn-outline-primary" [class.active]="type==='uo'" (click)="setType('uo')">
+	    <input type="radio" name="options" id="UO" autocomplete="off"> UO
+	  </label>
+	  <label class="btn px-3 btn-outline-primary" [class.active]="type==='bts'" (click)="setType('bts')">
+	    <input type="radio" name="options" id="BTS" autocomplete="off">BTS
+	  </label>
+	</div>
+</div>
+<ng-container *ngIf="InfosLeague[id]">
+	<div id="table-container" class="ml-3">
+		<ag-grid-angular 
+			style="width: 100%; height: 100%;"
+		    class="ag-theme-material"
+		    [rowData]="rowData" 
+		    [columnDefs]="columnDefs"
+		    [getRowClass]="getRowClass"
+		    (rowDataChanged)="onFirstDataRendered($event)"
+		    (gridColumnsChanged)="onFirstDataRendered($event)"
+		    (gridSizeChanged)="onFirstDataRendered($event)"
+		    suppressCellSelection
+		    >
+		</ag-grid-angular>
+	</div>
+<ng-container>

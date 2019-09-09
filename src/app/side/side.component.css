@@ -1,0 +1,41 @@
+.side{box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15)}
+
+.nav-item img{
+	min-width: 25px;
+	max-width: 25px;
+	margin-right: 15px;
+}
+
+.nav-item{
+	border-bottom: 1px solid #f3f3f3;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+.nav-item a{
+	color: #5d5c5d;
+	padding: 0.8rem 1rem;
+}
+
+.nav-item .collapse, .nav-item .collapsing{
+	border-left: 1px solid #00838f;
+	margin-left: 2rem;
+}
+
+.nav-link[aria-expanded="true"]{
+	font-weight: bold;
+}
+
+
+.collapse li{
+	border-bottom: 1px solid #f3f3f3;
+	color: #5d5c5d;
+	cursor: pointer;
+}
+
+.nav-link:hover{
+	background:#f2f2f2;
+}
+.nav-link .clicked{
+	color: #00838f;
+}
