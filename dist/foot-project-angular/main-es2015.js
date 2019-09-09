@@ -338,7 +338,7 @@ let ApiService = class ApiService {
         this.httpClient = httpClient;
         //baseUrl:string = "https://cors-anywhere.herokuapp.com/https://www.api-football.com/demo/api/v2/";
         this.baseUrl = "https://api-football-v1.p.rapidapi.com/v2/";
-        this.apiKey = "bd4ca8229dmshe5e7c2079127c06p1d4bd4jsndc1798d63de4";
+        this.apiKey = "YOURAPIKEY";
     }
     getStats(type, soustype = "", soustypebis = "") {
         type = type + "/";
