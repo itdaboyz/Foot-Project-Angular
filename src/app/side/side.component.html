@@ -1,0 +1,18 @@
+<div class="position-fixed h-100 w-sidebar side">
+    <ul class="nav flex-column flex-nowrap text-truncate" id="accordion">
+        <li class="nav-item" *ngFor="let countries of countries; let i = index">
+            <a class="nav-link" href="#submenu{{ i }}" data-toggle="collapse" data-target="#submenu{{ i }}" (click)="loadLeagues(countries.country)"><img src="{{countries.flag}}"  />
+	        <span class="mdc-list-item__text">{{countries.country}}</span></a>
+	        <div class="collapse" id="submenu{{ i }}" data-parent="#accordion" aria-expanded="false">
+		        <ul class="flex-column nav">
+		        	<ng-container *ngFor="let leagues of leagues[countries.country]">
+		        		<ng-container *ngIf="leagues.is_current==1 && leagues.type=='League'" >
+		        			<li class="nav-item"><a class="nav-link" href="#" (click)="loadTeams(leagues.league_id, countries.country, leagues.name)"><span class="mdc-list-item__text" [className]="leagues.league_id==clicked ? 'mdc-list-item__text clicked' : 'mdc-list-item__text'">{{leagues.name}}</span></a></li>
+						</ng-container>
+					</ng-container>
+		            <!--<li class="nav-item" *ngFor="let leagues of leagues[countries.country]"><a class="nav-link" href="#" *ngIf="leagues.is_current==1 && leagues.type=='League'" (click)="loadTeams(leagues.league_id)"><span class="mdc-list-item__text text-white">{{leagues.name}}</span></a></li>-->
+		        </ul>
+		    </div>
+        </li>
+    </ul>
+</div>
