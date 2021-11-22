@@ -8,7 +8,7 @@ export class ApiService {
 	
 	//baseUrl:string = "https://cors-anywhere.herokuapp.com/https://www.api-football.com/demo/api/v2/";
   baseUrl:string = "https://api-football-v1.p.rapidapi.com/v2/";
-  apiKey = "bd4ca8229dmshe5e7c2079127c06p1d4bd4jsndc1798d63de4";
+  apiKey = "YOURAPIKEY";
   stats;
 
   constructor(private httpClient: HttpClient) { }

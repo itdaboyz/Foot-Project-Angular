@@ -18,6 +18,10 @@ export class SideComponent implements OnInit {
   {code: "HU"},{code: "IE"},{code: "IS"},{code: "IT"},{code: "JP"},{code: "KZ"},{code: "LT"},{code: "MY"},{code: "MA"},{code: "ME"},{code: "NO"},{code: "NL"},{code: "PL"},
   {code: "PT"},{code: "CZ"},{code: "RO"},{code: "RU"},{code: "RS"},{code: "SK"},{code: "SI"},{code: "SE"},{code: "CH"},{code: "TN"},{code: "TR"},{code: "UA"},{code: "US"}
   ];/*
+  "DZ", "DE", "AR", "GB", "AU", "AT", "BE", "BY", "BR", "BG", "CL",
+  "CN", "KR", "HR", "DK", "ES", "FI", "FR", "GR",
+  "HU", "IE", "IS", "IT", "JP", "KZ", "LT", "MY", "MA", "ME", "NO", "NL", "PL",
+  "PT", "CZ", "RO", "RU", "RS", "SK", "SI", "SE", "CH", "TN", "TR", "UA", "US"*/
   /* GB = England & Scotland & Wales */
 
   constructor(private apiService: ApiService, private eventEmitterService: EventEmitterService ) { }
@@ -33,7 +37,6 @@ export class SideComponent implements OnInit {
     if (!this.leagues[country]){
       this.apiService.getStats("leagues", "country", country).subscribe((data)=>{
         this.leagues[country] = data['api']['leagues'];
-        //console.log(this.leagues[country]);
       });
     }
    }
