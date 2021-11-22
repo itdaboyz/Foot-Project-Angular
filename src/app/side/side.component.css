@@ -1,8 +1,8 @@
 .side{box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15)}
 
 .nav-item img{
-	min-width: 25px;
-	max-width: 25px;
+	min-width: 20px;
+	max-width: 20px;
 	margin-right: 15px;
 }
 
@@ -14,7 +14,9 @@
 
 .nav-item a{
 	color: #5d5c5d;
-	padding: 0.8rem 1rem;
+	padding: 0.4rem 1rem;
+	line-height: 0.9rem;
+	font-size: 0.9rem;
 }
 
 .nav-item .collapse, .nav-item .collapsing{

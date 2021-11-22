@@ -14,6 +14,7 @@ import { formatDate } from "@angular/common";
 export class MainComponent implements OnInit {
 
   teams = [];
+  rounds = [];
   standings = [];
   fixtures = [];
   id;
@@ -22,14 +23,16 @@ export class MainComponent implements OnInit {
   InfosLeague = [];
   columnDefs = [];
   rowData = [];
-  type = "uo";
-  filter = "all";
+  type;
+  filter;
 
   constructor(private apiService: ApiService, private eventEmitterService: EventEmitterService) { 
 
   	if (this.eventEmitterService.subsVar==undefined) {   
       this.eventEmitterService.subsVar = this.eventEmitterService.    
       invokeTeams.subscribe((id) => {    
+        this.filter = "all";
+        this.type = "uo";
      	this.id=id;
      	this.InfosTeam = [];
         this.loadTeams(id);
@@ -43,12 +46,14 @@ export class MainComponent implements OnInit {
     if(!this.InfosLeague[id]){
 	    this.apiService.getStats("teams", "league", id).subscribe((data)=>{
 	      this.teams[id] = data['api']['teams'];
+	      //console.log(data['api']);
 	    },
 	    (error)=>{
 	    	console.log(error);
 	    }
 	    ,
-	    ()=>{this.loadFixtures(id)})
+	    ()=>{/*console.log(this.teams);*/
+	    	this.loadFixtures(id)})
 	}
 	else(this.assignStandings(id))
    }
@@ -56,7 +61,8 @@ export class MainComponent implements OnInit {
    loadFixtures(id){
 	    this.apiService.getStats("fixtures", "league", id).subscribe(
 	    	(data)=>{
-	      this.fixtures[id] = data['api']['fixtures'];
+	      this.fixtures[id] = data['api']['fixtures'].reverse();
+	      //console.log(data['api']);
 	    },
 	    (error)=>{
 	    	console.log(error);
@@ -68,6 +74,7 @@ export class MainComponent implements OnInit {
 	loadStandings(id){
 		this.apiService.getStats("leagueTable", id).subscribe((data)=>{
 	      this.standings[id] = data['api'];
+	      //console.log(data['api']);
 	    },
 	    (error)=>{
 	    	console.log(error);
@@ -85,7 +92,7 @@ export class MainComponent implements OnInit {
     		i++;
     	}
     	this.InfosLeague[id] = this.InfosTeam;
-    	console.log(this.InfosLeague[id]);
+    	//console.log(this.InfosLeague[id]);
     	this.setTable();
 	}
 
@@ -101,16 +108,20 @@ export class MainComponent implements OnInit {
 
 		let i = 0;
 		this.infos = [];
-		for (let fixtures of this.fixtures[id].reverse()){
-			if((fixtures.awayTeam.team_id == team_id || fixtures.homeTeam.team_id == team_id) && fixtures.statusShort=="FT"){
-				let fixture_id = fixtures.fixture_id;
-				this.infos[i] = fixtures;
-				i++;
-			}
+		for (let fixture of this.fixtures[id]){
+			//if(fixture.round.includes('Regular Season') || fixture.round.includes('Regular_Season')){
+				if((fixture.awayTeam.team_id == team_id || fixture.homeTeam.team_id == team_id) && fixture.statusShort=="FT"){
+					let fixture_id = fixture.fixture_id;
+					this.infos[i] = fixture;
+					i++;
+				}
+			//}
 		}
-		this.InfosTeam[index] = new InfosTeam(team_id, team_name, team_logo, rank, this.infos);
-		this.InfosTeam[index].filter = this.filter;
-		this.InfosTeam[index].type = this.type;
+		if(this.infos.length > 0){
+			this.InfosTeam[index] = new InfosTeam(team_id, team_name, team_logo, rank, this.infos);
+			this.InfosTeam[index].filter = this.filter;
+			this.InfosTeam[index].type = this.type;
+		}
 	}
 
 
@@ -118,7 +129,9 @@ export class MainComponent implements OnInit {
 		if(this.filter!=filter){
 			this.filter = filter;
 			for(let team of this.InfosLeague[this.id]){
-				team.filter = filter;
+				if(team){
+					team.filter = filter;
+				}
 			}
 			this.setTable();
 		}
@@ -127,7 +140,9 @@ export class MainComponent implements OnInit {
 		if(this.type!=type){
 			this.type = type;
 			for(let team of this.InfosLeague[this.id]){
-				team.type = type;
+				if(team){
+					team.type = type;
+				}
 			}
 			this.setTable();
 		}
@@ -146,7 +161,6 @@ export class MainComponent implements OnInit {
 		        width: 70,
 		        maxWidth: 80,
 		        sortable: true,
-		        sort: "asc",
 		        type: "numericColumn"
 		      },
 		      {
@@ -154,7 +168,8 @@ export class MainComponent implements OnInit {
 		        field: "team_name",
 		        minWidth: 180,
 		        maxWidth: 350,
-		        sortable: true
+		        sortable: true,
+		        sort: "asc",
 		      },
 		      {
 		        headerName: "G",
@@ -164,8 +179,7 @@ export class MainComponent implements OnInit {
 		        maxWidth: 80,
 		        sortable: true,
 		        type: "numericColumn",
-		        cellRenderer: this.sumGCellRenderer,
-		        cellRendererParams:{filter:this.filter}
+		        valueGetter: this.sumGCellRenderer
 		      },
 		      {
 		        headerName: "O",
@@ -175,8 +189,7 @@ export class MainComponent implements OnInit {
 		        maxWidth: 80,
 		        sortable: true,
 		        type: "numericColumn",
-		        cellRenderer: this.sumOCellRenderer,
-		        cellRendererParams:{filter:this.filter}
+		        valueGetter: this.sumOCellRenderer
 		      },
 		      {
 		        headerName: "U",
@@ -186,14 +199,12 @@ export class MainComponent implements OnInit {
 		        maxWidth: 80,
 		        sortable: true,
 		        type: "numericColumn",
-		        cellRenderer: this.sumUCellRenderer,
-		        cellRendererParams:{filter:this.filter}
+		        valueGetter: this.sumUCellRenderer
 		      },
 		      {
 		        headerName: "Résultats",
 		        field: "fixtures",
 		        minWidth: 800,
-		        sortable: true,
 		        cellRenderer: this.fixturesCellRenderer,
 		        cellRendererParams:{filter:this.filter, type:this.type}
 		      }
@@ -208,7 +219,6 @@ export class MainComponent implements OnInit {
 		        width: 70,
 		        maxWidth: 80,
 		        sortable: true,
-		        sort: "asc",
 		        type: "numericColumn"
 		      },
 		      {
@@ -216,7 +226,8 @@ export class MainComponent implements OnInit {
 		        field: "team_name",
 		        minWidth: 180,
 		        maxWidth: 350,
-		        sortable: true
+		        sortable: true,
+		        sort: "asc"
 		      },
 		      {
 		        headerName: "G",
@@ -226,8 +237,7 @@ export class MainComponent implements OnInit {
 		        maxWidth: 80,
 		        sortable: true,
 		        type: "numericColumn",
-		        cellRenderer: this.sumGCellRenderer,
-		        cellRendererParams:{filter:this.filter}
+		        valueGetter: this.sumGCellRenderer
 		      },
 		      {
 		        headerName: "Y",
@@ -237,8 +247,7 @@ export class MainComponent implements OnInit {
 		        maxWidth: 80,
 		        sortable: true,
 		        type: "numericColumn",
-		        cellRenderer: this.sumYCellRenderer,
-		        cellRendererParams:{filter:this.filter}
+		        valueGetter: this.sumYCellRenderer
 		      },
 		      {
 		        headerName: "N",
@@ -248,14 +257,12 @@ export class MainComponent implements OnInit {
 		        maxWidth: 80,
 		        sortable: true,
 		        type: "numericColumn",
-		        cellRenderer: this.sumNCellRenderer,
-		        cellRendererParams:{filter:this.filter}
+		        valueGetter: this.sumNCellRenderer
 		      },
 		      {
 		        headerName: "Résultats",
 		        field: "fixtures",
 		        minWidth: 800,
-		        sortable: true,
 		        cellRenderer: this.fixturesCellRenderer,
 		        cellRendererParams:{filter:this.filter, type:this.type}
 		      }
@@ -267,19 +274,19 @@ export class MainComponent implements OnInit {
 	}
 
 	sumGCellRenderer(params){
-		return params.data.sumG[params.filter];
+		return params.data.sumG[params.data.filter];
 	}
 	sumYCellRenderer(params){
-		return params.data.sumY[params.filter];
+		return params.data.sumY[params.data.filter];
 	}
 	sumNCellRenderer(params){
-		return params.data.sumN[params.filter];
+		return params.data.sumN[params.data.filter];
 	}
 	sumOCellRenderer(params){
-		return params.data.sumO[params.filter];
+		return params.data.sumO[params.data.filter];
 	}
 	sumUCellRenderer(params){
-		return params.data.sumU[params.filter];
+		return params.data.sumU[params.data.filter];
 	}
 
 	fixturesCellRenderer(params) {
@@ -304,7 +311,7 @@ export class MainComponent implements OnInit {
 	  return retour;
 	}
     getRowClass = function(params) {
-    	let fixtures = params.data.fixtures;
+    	/*let fixtures = params.data.fixtures;
     	let counter = 0;
     	let previousValueUO = "";
     	let previousValueBTS = "";
@@ -341,7 +348,7 @@ export class MainComponent implements OnInit {
 			    }
 	  		}
 	  	}
-	    return style;
+	    return style;*/
 	}
 
   onFirstDataRendered(params) {
