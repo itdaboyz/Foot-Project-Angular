@@ -71,7 +71,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<div *ngIf=\"InfosLeague[id]\" class=\"m-3\">\n\t<div class=\"btn-group mr-3 btn-group-toggle\" data-toggle=\"buttons\">\n\t  <label class=\"btn px-3 btn-outline-primary active\" (click)=\"setFilter('all')\">\n\t    <input type=\"radio\" name=\"options\" id=\"All\" autocomplete=\"off\">All\n\t  </label>\n\t  <label class=\"btn px-3 btn-outline-primary\" (click)=\"setFilter('home')\">\n\t    <input type=\"radio\" name=\"options\" id=\"Home\" autocomplete=\"off\">Home\n\t  </label>\n\t  <label class=\"btn px-3 btn-outline-primary\" (click)=\"setFilter('away')\">\n\t    <input type=\"radio\" name=\"options\" id=\"Away\" autocomplete=\"off\">Away\n\t  </label>\n\t</div>\n\t<div class=\"btn-group btn-group-toggle\" data-toggle=\"buttons\">\n\t  <label class=\"btn px-3 btn-outline-primary\" [class.active]=\"type==='uo'\" (click)=\"setType('uo')\">\n\t    <input type=\"radio\" name=\"options\" id=\"UO\" autocomplete=\"off\"> UO\n\t  </label>\n\t  <label class=\"btn px-3 btn-outline-primary\" [class.active]=\"type==='bts'\" (click)=\"setType('bts')\">\n\t    <input type=\"radio\" name=\"options\" id=\"BTS\" autocomplete=\"off\">BTS\n\t  </label>\n\t</div>\n</div>\n<ng-container *ngIf=\"InfosLeague[id]\">\n\t<div id=\"table-container\" class=\"ml-3\">\n\t\t<ag-grid-angular \n\t\t\tstyle=\"width: 100%; height: 100%;\"\n\t\t    class=\"ag-theme-material\"\n\t\t    [rowData]=\"rowData\" \n\t\t    [columnDefs]=\"columnDefs\"\n\t\t    [getRowClass]=\"getRowClass\"\n\t\t    (rowDataChanged)=\"onFirstDataRendered($event)\"\n\t\t    (gridColumnsChanged)=\"onFirstDataRendered($event)\"\n\t\t    (gridSizeChanged)=\"onFirstDataRendered($event)\"\n\t\t    suppressCellSelection\n\t\t    >\n\t\t</ag-grid-angular>\n\t</div>\n<ng-container>");
+/* harmony default export */ __webpack_exports__["default"] = ("<div *ngIf=\"InfosLeague[id]\" class=\"m-3\">\n\t<div class=\"btn-group mr-3 btn-group-toggle\" data-toggle=\"buttons\">\n\t  <label class=\"btn px-3 btn-outline-primary\" [class.active]=\"filter==='all'\" (click)=\"setFilter('all')\">\n\t    <input type=\"radio\" name=\"options\" id=\"All\" autocomplete=\"off\">All\n\t  </label>\n\t  <label class=\"btn px-3 btn-outline-primary\" [class.active]=\"filter==='home'\" (click)=\"setFilter('home')\">\n\t    <input type=\"radio\" name=\"options\" id=\"Home\" autocomplete=\"off\">Home\n\t  </label>\n\t  <label class=\"btn px-3 btn-outline-primary\" [class.active]=\"filter==='away'\" (click)=\"setFilter('away')\">\n\t    <input type=\"radio\" name=\"options\" id=\"Away\" autocomplete=\"off\">Away\n\t  </label>\n\t</div>\n\t<div class=\"btn-group btn-group-toggle\" data-toggle=\"buttons\">\n\t  <label class=\"btn px-3 btn-outline-primary\" [class.active]=\"type==='uo'\" (click)=\"setType('uo')\">\n\t    <input type=\"radio\" name=\"options\" id=\"UO\" autocomplete=\"off\"> UO\n\t  </label>\n\t  <label class=\"btn px-3 btn-outline-primary\" [class.active]=\"type==='bts'\" (click)=\"setType('bts')\">\n\t    <input type=\"radio\" name=\"options\" id=\"BTS\" autocomplete=\"off\">BTS\n\t  </label>\n\t</div>\n</div>\n<ng-container *ngIf=\"InfosLeague[id]\">\n\t<div id=\"table-container\" class=\"ml-3\">\n\t\t<ag-grid-angular \n\t\t\tstyle=\"width: 100%; height: 100%;\"\n\t\t    class=\"ag-theme-material\"\n\t\t    [rowData]=\"rowData\" \n\t\t    [columnDefs]=\"columnDefs\"\n\t\t    [rowHeight]=\"25\"\n\t\t    [getRowClass]=\"getRowClass\"\n\t\t    (rowDataChanged)=\"onFirstDataRendered($event)\"\n\t\t    (gridColumnsChanged)=\"onFirstDataRendered($event)\"\n\t\t    (gridSizeChanged)=\"onFirstDataRendered($event)\"\n\t\t    suppressCellSelection\n\t\t    >\n\t\t</ag-grid-angular>\n\t</div>\n<ng-container>");
 
 /***/ }),
 
@@ -736,6 +736,7 @@ let MainComponent = class MainComponent {
         this.apiService = apiService;
         this.eventEmitterService = eventEmitterService;
         this.teams = [];
+        this.rounds = [];
         this.standings = [];
         this.fixtures = [];
         this.infos = [];
@@ -743,51 +744,51 @@ let MainComponent = class MainComponent {
         this.InfosLeague = [];
         this.columnDefs = [];
         this.rowData = [];
-        this.type = "uo";
-        this.filter = "all";
         this.getRowClass = function (params) {
-            let fixtures = params.data.fixtures;
+            /*let fixtures = params.data.fixtures;
             let counter = 0;
             let previousValueUO = "";
             let previousValueBTS = "";
             let style = "";
             let type;
-            for (let fixture of fixtures) {
-                if (params.data.filter == "all" || (params.data.filter == "home" && fixture.homeTeam.team_id == params.data.team_id) || (params.data.filter == "away" && fixture.awayTeam.team_id == params.data.team_id)) {
-                    if (params.data.type == "uo" && (fixture.typeUO == "U" || fixture.typeUO == "O")) {
-                        if (fixture.typeUO == previousValueUO) {
+            for(let fixture of fixtures){
+                if(params.data.filter == "all" || (params.data.filter == "home" && fixture.homeTeam.team_id == params.data.team_id) || (params.data.filter == "away" && fixture.awayTeam.team_id == params.data.team_id)){
+                    if(params.data.type == "uo" && (fixture.typeUO =="U" || fixture.typeUO == "O")){
+                        if( fixture.typeUO == previousValueUO){
                             counter++;
                         }
-                        else {
+                        else{
                             counter = 0;
                         }
                         previousValueUO = fixture.typeUO;
                     }
-                    else if (params.data.type == "bts" && (fixture.typeBTS == "Y" || fixture.typeBTS == "N")) {
-                        if (fixture.typeBTS == previousValueBTS) {
+                    else if(params.data.type == "bts" && (fixture.typeBTS =="Y" || fixture.typeBTS == "N")){
+                        if( fixture.typeBTS == previousValueBTS){
                             counter++;
                         }
-                        else {
+                        else{
                             counter = 0;
                         }
                         previousValueBTS = fixture.typeBTS;
                     }
-                    if (counter == 5) {
-                        style = 'sixInARow';
+                    if(counter == 5){
+                        style='sixInARow';
                     }
-                    else if (counter == 6) {
-                        style = 'sevenInARow';
+                    else if(counter == 6){
+                        style='sevenInARow';
                     }
-                    else if (counter >= 7) {
-                        style = 'eightInARow';
+                    else if(counter >= 7){
+                        style='eightInARow';
                     }
                 }
             }
-            return style;
+            return style;*/
         };
         if (this.eventEmitterService.subsVar == undefined) {
             this.eventEmitterService.subsVar = this.eventEmitterService.
                 invokeTeams.subscribe((id) => {
+                this.filter = "all";
+                this.type = "uo";
                 this.id = id;
                 this.InfosTeam = [];
                 this.loadTeams(id);
@@ -799,16 +800,20 @@ let MainComponent = class MainComponent {
         if (!this.InfosLeague[id]) {
             this.apiService.getStats("teams", "league", id).subscribe((data) => {
                 this.teams[id] = data['api']['teams'];
+                //console.log(data['api']);
             }, (error) => {
                 console.log(error);
-            }, () => { this.loadFixtures(id); });
+            }, () => {
+                this.loadFixtures(id);
+            });
         }
         else
             (this.assignStandings(id));
     }
     loadFixtures(id) {
         this.apiService.getStats("fixtures", "league", id).subscribe((data) => {
-            this.fixtures[id] = data['api']['fixtures'];
+            this.fixtures[id] = data['api']['fixtures'].reverse();
+            //console.log(data['api']);
         }, (error) => {
             console.log(error);
         }, () => { this.loadStandings(id); });
@@ -816,6 +821,7 @@ let MainComponent = class MainComponent {
     loadStandings(id) {
         this.apiService.getStats("leagueTable", id).subscribe((data) => {
             this.standings[id] = data['api'];
+            //console.log(data['api']);
         }, (error) => {
             console.log(error);
         }, () => { this.assignStandings(id); });
@@ -828,7 +834,7 @@ let MainComponent = class MainComponent {
             i++;
         }
         this.InfosLeague[id] = this.InfosTeam;
-        console.log(this.InfosLeague[id]);
+        //console.log(this.InfosLeague[id]);
         this.setTable();
     }
     assignFixtures(id, team_id, team_name, team_logo, index) {
@@ -842,22 +848,28 @@ let MainComponent = class MainComponent {
         }
         let i = 0;
         this.infos = [];
-        for (let fixtures of this.fixtures[id].reverse()) {
-            if ((fixtures.awayTeam.team_id == team_id || fixtures.homeTeam.team_id == team_id) && fixtures.statusShort == "FT") {
-                let fixture_id = fixtures.fixture_id;
-                this.infos[i] = fixtures;
+        for (let fixture of this.fixtures[id]) {
+            //if(fixture.round.includes('Regular Season') || fixture.round.includes('Regular_Season')){
+            if ((fixture.awayTeam.team_id == team_id || fixture.homeTeam.team_id == team_id) && fixture.statusShort == "FT") {
+                let fixture_id = fixture.fixture_id;
+                this.infos[i] = fixture;
                 i++;
             }
+            //}
         }
-        this.InfosTeam[index] = new _InfosTeam__WEBPACK_IMPORTED_MODULE_4__["InfosTeam"](team_id, team_name, team_logo, rank, this.infos);
-        this.InfosTeam[index].filter = this.filter;
-        this.InfosTeam[index].type = this.type;
+        if (this.infos.length > 0) {
+            this.InfosTeam[index] = new _InfosTeam__WEBPACK_IMPORTED_MODULE_4__["InfosTeam"](team_id, team_name, team_logo, rank, this.infos);
+            this.InfosTeam[index].filter = this.filter;
+            this.InfosTeam[index].type = this.type;
+        }
     }
     setFilter(filter) {
         if (this.filter != filter) {
             this.filter = filter;
             for (let team of this.InfosLeague[this.id]) {
-                team.filter = filter;
+                if (team) {
+                    team.filter = filter;
+                }
             }
             this.setTable();
         }
@@ -866,7 +878,9 @@ let MainComponent = class MainComponent {
         if (this.type != type) {
             this.type = type;
             for (let team of this.InfosLeague[this.id]) {
-                team.type = type;
+                if (team) {
+                    team.type = type;
+                }
             }
             this.setTable();
         }
@@ -881,7 +895,6 @@ let MainComponent = class MainComponent {
                     width: 70,
                     maxWidth: 80,
                     sortable: true,
-                    sort: "asc",
                     type: "numericColumn"
                 },
                 {
@@ -889,7 +902,8 @@ let MainComponent = class MainComponent {
                     field: "team_name",
                     minWidth: 180,
                     maxWidth: 350,
-                    sortable: true
+                    sortable: true,
+                    sort: "asc",
                 },
                 {
                     headerName: "G",
@@ -899,8 +913,7 @@ let MainComponent = class MainComponent {
                     maxWidth: 80,
                     sortable: true,
                     type: "numericColumn",
-                    cellRenderer: this.sumGCellRenderer,
-                    cellRendererParams: { filter: this.filter }
+                    valueGetter: this.sumGCellRenderer
                 },
                 {
                     headerName: "O",
@@ -910,8 +923,7 @@ let MainComponent = class MainComponent {
                     maxWidth: 80,
                     sortable: true,
                     type: "numericColumn",
-                    cellRenderer: this.sumOCellRenderer,
-                    cellRendererParams: { filter: this.filter }
+                    valueGetter: this.sumOCellRenderer
                 },
                 {
                     headerName: "U",
@@ -921,14 +933,12 @@ let MainComponent = class MainComponent {
                     maxWidth: 80,
                     sortable: true,
                     type: "numericColumn",
-                    cellRenderer: this.sumUCellRenderer,
-                    cellRendererParams: { filter: this.filter }
+                    valueGetter: this.sumUCellRenderer
                 },
                 {
                     headerName: "Résultats",
                     field: "fixtures",
                     minWidth: 800,
-                    sortable: true,
                     cellRenderer: this.fixturesCellRenderer,
                     cellRendererParams: { filter: this.filter, type: this.type }
                 }
@@ -943,7 +953,6 @@ let MainComponent = class MainComponent {
                     width: 70,
                     maxWidth: 80,
                     sortable: true,
-                    sort: "asc",
                     type: "numericColumn"
                 },
                 {
@@ -951,7 +960,8 @@ let MainComponent = class MainComponent {
                     field: "team_name",
                     minWidth: 180,
                     maxWidth: 350,
-                    sortable: true
+                    sortable: true,
+                    sort: "asc"
                 },
                 {
                     headerName: "G",
@@ -961,8 +971,7 @@ let MainComponent = class MainComponent {
                     maxWidth: 80,
                     sortable: true,
                     type: "numericColumn",
-                    cellRenderer: this.sumGCellRenderer,
-                    cellRendererParams: { filter: this.filter }
+                    valueGetter: this.sumGCellRenderer
                 },
                 {
                     headerName: "Y",
@@ -972,8 +981,7 @@ let MainComponent = class MainComponent {
                     maxWidth: 80,
                     sortable: true,
                     type: "numericColumn",
-                    cellRenderer: this.sumYCellRenderer,
-                    cellRendererParams: { filter: this.filter }
+                    valueGetter: this.sumYCellRenderer
                 },
                 {
                     headerName: "N",
@@ -983,14 +991,12 @@ let MainComponent = class MainComponent {
                     maxWidth: 80,
                     sortable: true,
                     type: "numericColumn",
-                    cellRenderer: this.sumNCellRenderer,
-                    cellRendererParams: { filter: this.filter }
+                    valueGetter: this.sumNCellRenderer
                 },
                 {
                     headerName: "Résultats",
                     field: "fixtures",
                     minWidth: 800,
-                    sortable: true,
                     cellRenderer: this.fixturesCellRenderer,
                     cellRendererParams: { filter: this.filter, type: this.type }
                 }
@@ -999,19 +1005,19 @@ let MainComponent = class MainComponent {
         this.rowData = this.InfosLeague[this.id];
     }
     sumGCellRenderer(params) {
-        return params.data.sumG[params.filter];
+        return params.data.sumG[params.data.filter];
     }
     sumYCellRenderer(params) {
-        return params.data.sumY[params.filter];
+        return params.data.sumY[params.data.filter];
     }
     sumNCellRenderer(params) {
-        return params.data.sumN[params.filter];
+        return params.data.sumN[params.data.filter];
     }
     sumOCellRenderer(params) {
-        return params.data.sumO[params.filter];
+        return params.data.sumO[params.data.filter];
     }
     sumUCellRenderer(params) {
-        return params.data.sumU[params.filter];
+        return params.data.sumU[params.data.filter];
     }
     fixturesCellRenderer(params) {
         let fixtures = params.data.fixtures;
@@ -1063,7 +1069,7 @@ MainComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (".side{box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15)}\r\n\r\n.nav-item img{\r\n\tmin-width: 25px;\r\n\tmax-width: 25px;\r\n\tmargin-right: 15px;\r\n}\r\n\r\n.nav-item{\r\n\tborder-bottom: 1px solid #f3f3f3;\r\n\ttext-transform: uppercase;\r\n\tcursor: pointer;\r\n}\r\n\r\n.nav-item a{\r\n\tcolor: #5d5c5d;\r\n\tpadding: 0.8rem 1rem;\r\n}\r\n\r\n.nav-item .collapse, .nav-item .collapsing{\r\n\tborder-left: 1px solid #00838f;\r\n\tmargin-left: 2rem;\r\n}\r\n\r\n.nav-link[aria-expanded=\"true\"]{\r\n\tfont-weight: bold;\r\n}\r\n\r\n.collapse li{\r\n\tborder-bottom: 1px solid #f3f3f3;\r\n\tcolor: #5d5c5d;\r\n\tcursor: pointer;\r\n}\r\n\r\n.nav-link:hover{\r\n\tbackground:#f2f2f2;\r\n}\r\n\r\n.nav-link .clicked{\r\n\tcolor: #00838f;\r\n}\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvc2lkZS9zaWRlLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsTUFBTSw2Q0FBNkM7O0FBRW5EO0NBQ0MsZUFBZTtDQUNmLGVBQWU7Q0FDZixrQkFBa0I7QUFDbkI7O0FBRUE7Q0FDQyxnQ0FBZ0M7Q0FDaEMseUJBQXlCO0NBQ3pCLGVBQWU7QUFDaEI7O0FBRUE7Q0FDQyxjQUFjO0NBQ2Qsb0JBQW9CO0FBQ3JCOztBQUVBO0NBQ0MsOEJBQThCO0NBQzlCLGlCQUFpQjtBQUNsQjs7QUFFQTtDQUNDLGlCQUFpQjtBQUNsQjs7QUFHQTtDQUNDLGdDQUFnQztDQUNoQyxjQUFjO0NBQ2QsZUFBZTtBQUNoQjs7QUFFQTtDQUNDLGtCQUFrQjtBQUNuQjs7QUFDQTtDQUNDLGNBQWM7QUFDZiIsImZpbGUiOiJzcmMvYXBwL3NpZGUvc2lkZS5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLnNpZGV7Ym94LXNoYWRvdzogMCAwLjVyZW0gMXJlbSByZ2JhKDAsIDAsIDAsIDAuMTUpfVxyXG5cclxuLm5hdi1pdGVtIGltZ3tcclxuXHRtaW4td2lkdGg6IDI1cHg7XHJcblx0bWF4LXdpZHRoOiAyNXB4O1xyXG5cdG1hcmdpbi1yaWdodDogMTVweDtcclxufVxyXG5cclxuLm5hdi1pdGVte1xyXG5cdGJvcmRlci1ib3R0b206IDFweCBzb2xpZCAjZjNmM2YzO1xyXG5cdHRleHQtdHJhbnNmb3JtOiB1cHBlcmNhc2U7XHJcblx0Y3Vyc29yOiBwb2ludGVyO1xyXG59XHJcblxyXG4ubmF2LWl0ZW0gYXtcclxuXHRjb2xvcjogIzVkNWM1ZDtcclxuXHRwYWRkaW5nOiAwLjhyZW0gMXJlbTtcclxufVxyXG5cclxuLm5hdi1pdGVtIC5jb2xsYXBzZSwgLm5hdi1pdGVtIC5jb2xsYXBzaW5ne1xyXG5cdGJvcmRlci1sZWZ0OiAxcHggc29saWQgIzAwODM4ZjtcclxuXHRtYXJnaW4tbGVmdDogMnJlbTtcclxufVxyXG5cclxuLm5hdi1saW5rW2FyaWEtZXhwYW5kZWQ9XCJ0cnVlXCJde1xyXG5cdGZvbnQtd2VpZ2h0OiBib2xkO1xyXG59XHJcblxyXG5cclxuLmNvbGxhcHNlIGxpe1xyXG5cdGJvcmRlci1ib3R0b206IDFweCBzb2xpZCAjZjNmM2YzO1xyXG5cdGNvbG9yOiAjNWQ1YzVkO1xyXG5cdGN1cnNvcjogcG9pbnRlcjtcclxufVxyXG5cclxuLm5hdi1saW5rOmhvdmVye1xyXG5cdGJhY2tncm91bmQ6I2YyZjJmMjtcclxufVxyXG4ubmF2LWxpbmsgLmNsaWNrZWR7XHJcblx0Y29sb3I6ICMwMDgzOGY7XHJcbn1cclxuIl19 */");
+/* harmony default export */ __webpack_exports__["default"] = (".side{box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15)}\r\n\r\n.nav-item img{\r\n\tmin-width: 20px;\r\n\tmax-width: 20px;\r\n\tmargin-right: 15px;\r\n}\r\n\r\n.nav-item{\r\n\tborder-bottom: 1px solid #f3f3f3;\r\n\ttext-transform: uppercase;\r\n\tcursor: pointer;\r\n}\r\n\r\n.nav-item a{\r\n\tcolor: #5d5c5d;\r\n\tpadding: 0.4rem 1rem;\r\n\tline-height: 0.9rem;\r\n\tfont-size: 0.9rem;\r\n}\r\n\r\n.nav-item .collapse, .nav-item .collapsing{\r\n\tborder-left: 1px solid #00838f;\r\n\tmargin-left: 2rem;\r\n}\r\n\r\n.nav-link[aria-expanded=\"true\"]{\r\n\tfont-weight: bold;\r\n}\r\n\r\n.collapse li{\r\n\tborder-bottom: 1px solid #f3f3f3;\r\n\tcolor: #5d5c5d;\r\n\tcursor: pointer;\r\n}\r\n\r\n.nav-link:hover{\r\n\tbackground:#f2f2f2;\r\n}\r\n\r\n.nav-link .clicked{\r\n\tcolor: #00838f;\r\n}\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvc2lkZS9zaWRlLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsTUFBTSw2Q0FBNkM7O0FBRW5EO0NBQ0MsZUFBZTtDQUNmLGVBQWU7Q0FDZixrQkFBa0I7QUFDbkI7O0FBRUE7Q0FDQyxnQ0FBZ0M7Q0FDaEMseUJBQXlCO0NBQ3pCLGVBQWU7QUFDaEI7O0FBRUE7Q0FDQyxjQUFjO0NBQ2Qsb0JBQW9CO0NBQ3BCLG1CQUFtQjtDQUNuQixpQkFBaUI7QUFDbEI7O0FBRUE7Q0FDQyw4QkFBOEI7Q0FDOUIsaUJBQWlCO0FBQ2xCOztBQUVBO0NBQ0MsaUJBQWlCO0FBQ2xCOztBQUdBO0NBQ0MsZ0NBQWdDO0NBQ2hDLGNBQWM7Q0FDZCxlQUFlO0FBQ2hCOztBQUVBO0NBQ0Msa0JBQWtCO0FBQ25COztBQUNBO0NBQ0MsY0FBYztBQUNmIiwiZmlsZSI6InNyYy9hcHAvc2lkZS9zaWRlLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuc2lkZXtib3gtc2hhZG93OiAwIDAuNXJlbSAxcmVtIHJnYmEoMCwgMCwgMCwgMC4xNSl9XHJcblxyXG4ubmF2LWl0ZW0gaW1ne1xyXG5cdG1pbi13aWR0aDogMjBweDtcclxuXHRtYXgtd2lkdGg6IDIwcHg7XHJcblx0bWFyZ2luLXJpZ2h0OiAxNXB4O1xyXG59XHJcblxyXG4ubmF2LWl0ZW17XHJcblx0Ym9yZGVyLWJvdHRvbTogMXB4IHNvbGlkICNmM2YzZjM7XHJcblx0dGV4dC10cmFuc2Zvcm06IHVwcGVyY2FzZTtcclxuXHRjdXJzb3I6IHBvaW50ZXI7XHJcbn1cclxuXHJcbi5uYXYtaXRlbSBhe1xyXG5cdGNvbG9yOiAjNWQ1YzVkO1xyXG5cdHBhZGRpbmc6IDAuNHJlbSAxcmVtO1xyXG5cdGxpbmUtaGVpZ2h0OiAwLjlyZW07XHJcblx0Zm9udC1zaXplOiAwLjlyZW07XHJcbn1cclxuXHJcbi5uYXYtaXRlbSAuY29sbGFwc2UsIC5uYXYtaXRlbSAuY29sbGFwc2luZ3tcclxuXHRib3JkZXItbGVmdDogMXB4IHNvbGlkICMwMDgzOGY7XHJcblx0bWFyZ2luLWxlZnQ6IDJyZW07XHJcbn1cclxuXHJcbi5uYXYtbGlua1thcmlhLWV4cGFuZGVkPVwidHJ1ZVwiXXtcclxuXHRmb250LXdlaWdodDogYm9sZDtcclxufVxyXG5cclxuXHJcbi5jb2xsYXBzZSBsaXtcclxuXHRib3JkZXItYm90dG9tOiAxcHggc29saWQgI2YzZjNmMztcclxuXHRjb2xvcjogIzVkNWM1ZDtcclxuXHRjdXJzb3I6IHBvaW50ZXI7XHJcbn1cclxuXHJcbi5uYXYtbGluazpob3ZlcntcclxuXHRiYWNrZ3JvdW5kOiNmMmYyZjI7XHJcbn1cclxuLm5hdi1saW5rIC5jbGlja2Vke1xyXG5cdGNvbG9yOiAjMDA4MzhmO1xyXG59XHJcbiJdfQ== */");
 
 /***/ }),
 
@@ -1086,7 +1092,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let SideComponent = class SideComponent {
-    /* GB = England & Scotland & Wales */
     constructor(apiService, eventEmitterService) {
         this.apiService = apiService;
         this.eventEmitterService = eventEmitterService;
@@ -1097,10 +1102,7 @@ let SideComponent = class SideComponent {
             { code: "HU" }, { code: "IE" }, { code: "IS" }, { code: "IT" }, { code: "JP" }, { code: "KZ" }, { code: "LT" }, { code: "MY" }, { code: "MA" }, { code: "ME" }, { code: "NO" }, { code: "NL" }, { code: "PL" },
             { code: "PT" }, { code: "CZ" }, { code: "RO" }, { code: "RU" }, { code: "RS" }, { code: "SK" }, { code: "SI" }, { code: "SE" }, { code: "CH" }, { code: "TN" }, { code: "TR" }, { code: "UA" }, { code: "US" }
         ]; /*
-        "DZ", "DE", "AR", "GB", "AU", "AT", "BE", "BY", "BR", "BG", "CL",
-        "CN", "KR", "HR", "DK", "ES", "FI", "FR", "GR",
-        "HU", "IE", "IS", "IT", "JP", "KZ", "LT", "MY", "MA", "ME", "NO", "NL", "PL",
-        "PT", "CZ", "RO", "RU", "RS", "SK", "SI", "SE", "CH", "TN", "TR", "UA", "US"*/
+        /* GB = England & Scotland & Wales */
     }
     ngOnInit() {
         this.apiService.getStats("countries").subscribe((data) => {
@@ -1112,6 +1114,7 @@ let SideComponent = class SideComponent {
         if (!this.leagues[country]) {
             this.apiService.getStats("leagues", "country", country).subscribe((data) => {
                 this.leagues[country] = data['api']['leagues'];
+                //console.log(this.leagues[country]);
             });
         }
     }
@@ -1205,7 +1208,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_3__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\Cyril Fromont\OneDrive - VOCALCOM\Desktop\project\foot-project-angular\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! C:\workspace\Foot-Project-Angular\src\main.ts */"./src/main.ts");
 
 
 /***/ })

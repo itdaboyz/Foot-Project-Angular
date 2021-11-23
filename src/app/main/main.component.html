@@ -1,12 +1,12 @@
 <div *ngIf="InfosLeague[id]" class="m-3">
 	<div class="btn-group mr-3 btn-group-toggle" data-toggle="buttons">
-	  <label class="btn px-3 btn-outline-primary active" (click)="setFilter('all')">
+	  <label class="btn px-3 btn-outline-primary" [class.active]="filter==='all'" (click)="setFilter('all')">
 	    <input type="radio" name="options" id="All" autocomplete="off">All
 	  </label>
-	  <label class="btn px-3 btn-outline-primary" (click)="setFilter('home')">
+	  <label class="btn px-3 btn-outline-primary" [class.active]="filter==='home'" (click)="setFilter('home')">
 	    <input type="radio" name="options" id="Home" autocomplete="off">Home
 	  </label>
-	  <label class="btn px-3 btn-outline-primary" (click)="setFilter('away')">
+	  <label class="btn px-3 btn-outline-primary" [class.active]="filter==='away'" (click)="setFilter('away')">
 	    <input type="radio" name="options" id="Away" autocomplete="off">Away
 	  </label>
 	</div>
@@ -26,6 +26,7 @@
 		    class="ag-theme-material"
 		    [rowData]="rowData" 
 		    [columnDefs]="columnDefs"
+		    [rowHeight]="25"
 		    [getRowClass]="getRowClass"
 		    (rowDataChanged)="onFirstDataRendered($event)"
 		    (gridColumnsChanged)="onFirstDataRendered($event)"
